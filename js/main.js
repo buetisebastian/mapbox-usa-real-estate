@@ -9,16 +9,19 @@ const map = new mapboxgl.Map({
 
 map.addControl(new mapboxgl.NavigationControl());
 
-map.on('load', () => {
+// Esto te va a mostrar el error real si hay uno
+map.on('error', (e) => console.error('MAPBOX ERROR:', e?.error || e));
 
-  // Fuente
+map.on('load', () => {
   map.addSource('states', {
     type: 'geojson',
     data: 'data/states.geojson',
-    promoteId: 'STATEFP'
+    // ✅ genera feature.id automáticamente si el GeoJSON no trae uno usable
+    generateId: true
+    // Si querés volver a promoteId más adelante:
+    // promoteId: 'STATEFP'
   });
 
-  // Fill
   map.addLayer({
     id: 'states-fill',
     type: 'fill',
@@ -39,44 +42,35 @@ map.on('load', () => {
     }
   });
 
-  // Outline
   map.addLayer({
     id: 'states-outline',
     type: 'line',
     source: 'states',
-    paint: {
-      'line-color': '#ffffff',
-      'line-width': 1
-    }
+    paint: { 'line-color': '#ffffff', 'line-width': 1 }
   });
 
-  // ===== INTERACCIÓN =====
   let hoveredId = null;
   let selectedId = null;
 
-  const popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false
-  });
+  const popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false });
 
   map.on('mousemove', 'states-fill', (e) => {
-    if (!e.features.length) return;
+    if (!e.features || !e.features.length) return;
 
-    const feature = e.features[0];
-    const id = feature.id;
+    const f = e.features[0];
+    const id = f.id;
 
-    // Hover
+    // ✅ si por alguna razón no hay id, salimos sin romper nada
+    if (id === null || id === undefined) return;
+
     if (hoveredId !== null && hoveredId !== id) {
       map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
     }
     hoveredId = id;
     map.setFeatureState({ source: 'states', id }, { hover: true });
 
-    // Popup
-    popup
-      .setLngLat(e.lngLat)
-      .setHTML(`<strong>${feature.properties.NAME}</strong>`)
-      .addTo(map);
+    const name = f.properties?.NAME || 'State';
+    popup.setLngLat(e.lngLat).setHTML(`<strong>${name}</strong>`).addTo(map);
   });
 
   map.on('mouseleave', 'states-fill', () => {
@@ -88,9 +82,11 @@ map.on('load', () => {
   });
 
   map.on('click', 'states-fill', (e) => {
-    if (!e.features.length) return;
+    if (!e.features || !e.features.length) return;
 
-    const id = e.features[0].id;
+    const f = e.features[0];
+    const id = f.id;
+    if (id === null || id === undefined) return;
 
     if (selectedId !== null && selectedId !== id) {
       map.setFeatureState({ source: 'states', id: selectedId }, { selected: false });
@@ -101,6 +97,4 @@ map.on('load', () => {
 
     map.setFeatureState({ source: 'states', id }, { selected });
   });
-
 });
-
