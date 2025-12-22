@@ -84,7 +84,7 @@ map.addSource('states', {
   map.on('mouseleave', 'states-fill', () => {
     popup.remove();
   });
-
+});
   // ✅ FIN DEL BLOQUE HOVER + TOOLTIP
 
 let hoveredId = null;
@@ -129,5 +129,5 @@ map.on('click', 'states-fill', (e) => {
   map.setFeatureState({ source: 'states', id }, { selected: newSelected });
 });
 
-});
+
 
