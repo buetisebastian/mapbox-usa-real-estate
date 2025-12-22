@@ -9,6 +9,11 @@ const map = new mapboxgl.Map({
   zoom: 3
 });
 
+map.on('error', (e) => {
+  console.error('MAPBOX ERROR:', e.error);
+});
+
+
 map.addControl(new mapboxgl.NavigationControl());
 
 map.on('load', () => {
