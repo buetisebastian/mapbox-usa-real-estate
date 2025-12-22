@@ -11,14 +11,14 @@ map.addControl(new mapboxgl.NavigationControl());
 
 map.on('load', () => {
 
-  // 1) SOURCE con promoteId (necesario para feature-state)
+  // Fuente
   map.addSource('states', {
     type: 'geojson',
     data: 'data/states.geojson',
     promoteId: 'STATEFP'
   });
 
-  // 2) CAPA fill con colores dinámicos (hover/selected)
+  // Fill
   map.addLayer({
     id: 'states-fill',
     type: 'fill',
@@ -33,13 +33,13 @@ map.on('load', () => {
       'fill-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false], 0.75,
-        ['boolean', ['feature-state', 'selected'], false], 0.70,
+        ['boolean', ['feature-state', 'selected'], false], 0.7,
         0.4
       ]
     }
   });
 
-  // 3) borde
+  // Outline
   map.addLayer({
     id: 'states-outline',
     type: 'line',
@@ -50,82 +50,57 @@ map.on('load', () => {
     }
   });
 
-  // 4) Popup
+  // ===== INTERACCIÓN =====
+  let hoveredId = null;
+  let selectedId = null;
+
   const popup = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false
   });
 
-  // 5) Estado interno de hover/selección
-  let hoveredId = null;
-  let selectedId = null;
-
-  // 6) Cursor + hover + tooltip
-  map.on('mouseenter', 'states-fill', () => {
-    map.getCanvas().style.cursor = 'pointer';
-  });
-
-  map.on('mouseleave', 'states-fill', () => {
-    map.getCanvas().style.cursor = '';
-
-    // apagar hover
-    if (hoveredId !== null) {
-      map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
-    }
-    hoveredId = null;
-
-    // sacar popup
-    popup.remove();
-  });
-
   map.on('mousemove', 'states-fill', (e) => {
-    const feature = e.features && e.features[0];
-    if (!feature) return;
+    if (!e.features.length) return;
 
-    // --- hover ---
+    const feature = e.features[0];
     const id = feature.id;
-    if (id == null) return;
 
+    // Hover
     if (hoveredId !== null && hoveredId !== id) {
       map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
     }
     hoveredId = id;
     map.setFeatureState({ source: 'states', id }, { hover: true });
 
-    // --- tooltip ---
-    const name =
-      feature.properties.NAME ||
-      feature.properties.name ||
-      feature.properties.STATE_NAME ||
-      'Estado';
-
+    // Popup
     popup
       .setLngLat(e.lngLat)
-      .setHTML(`<strong>${name}</strong>`)
+      .setHTML(`<strong>${feature.properties.NAME}</strong>`)
       .addTo(map);
   });
 
-  // 7) Click para seleccionar (toggle)
+  map.on('mouseleave', 'states-fill', () => {
+    if (hoveredId !== null) {
+      map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
+    }
+    hoveredId = null;
+    popup.remove();
+  });
+
   map.on('click', 'states-fill', (e) => {
-    const feature = e.features && e.features[0];
-    if (!feature) return;
+    if (!e.features.length) return;
 
-    const id = feature.id;
-    if (id == null) return;
+    const id = e.features[0].id;
 
-    // apagar selección anterior (si era otro)
     if (selectedId !== null && selectedId !== id) {
       map.setFeatureState({ source: 'states', id: selectedId }, { selected: false });
     }
 
-    // toggle
-    const willSelect = selectedId !== id;
-    selectedId = willSelect ? id : null;
+    const selected = selectedId !== id;
+    selectedId = selected ? id : null;
 
-    map.setFeatureState({ source: 'states', id }, { selected: willSelect });
+    map.setFeatureState({ source: 'states', id }, { selected });
   });
 
 });
-
-
 
