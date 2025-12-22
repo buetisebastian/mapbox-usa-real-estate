@@ -13,18 +13,31 @@ map.addControl(new mapboxgl.NavigationControl());
 
 map.on('load', () => {
 
-  map.addSource('states', {
-    type: 'geojson',
-    data: 'data/states.geojson'
-  });
+map.addSource('states', {
+  type: 'geojson',
+  data: 'data/states.geojson',
+  promoteId: 'STATEFP'
+});
 
   map.addLayer({
     id: 'states-fill',
     type: 'fill',
     source: 'states',
     paint: {
-      'fill-color': '#3bb2d0',
-      'fill-opacity': 0.4
+  'fill-color': [
+    'case',
+    ['boolean', ['feature-state', 'hover'], false], '#ffd166',
+    ['boolean', ['feature-state', 'selected'], false], '#ef476f',
+    '#3bb2d0'
+  ],
+  'fill-opacity': [
+    'case',
+    ['boolean', ['feature-state', 'hover'], false], 0.75,
+    ['boolean', ['feature-state', 'selected'], false], 0.70,
+    0.4
+  ]
+}
+
     }
   });
 
