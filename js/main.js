@@ -1,4 +1,4 @@
-mapboxgl.accessToken = 'TU_TOKEN_AQUI';
+mapboxgl.accessToken = 'pk.eyJ1IjoiYnVldGlzZWJhc3RpYW4iLCJhIjoiY21qZWJnN3B3MDFpOTNmbjBwNnQzMjQzZyJ9.S-PoMRw0fCRq52vwCbU0mg';
 
 console.log('TOKEN CARGADO');
 
