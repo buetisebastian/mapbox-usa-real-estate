@@ -10,3 +10,32 @@ const map = new mapboxgl.Map({
 });
 
 map.addControl(new mapboxgl.NavigationControl());
+
+map.on('load', () => {
+
+  map.addSource('states', {
+    type: 'geojson',
+    data: 'data/states.geojson'
+  });
+
+  map.addLayer({
+    id: 'states-fill',
+    type: 'fill',
+    source: 'states',
+    paint: {
+      'fill-color': '#3bb2d0',
+      'fill-opacity': 0.4
+    }
+  });
+
+  map.addLayer({
+    id: 'states-outline',
+    type: 'line',
+    source: 'states',
+    paint: {
+      'line-color': '#ffffff',
+      'line-width': 1
+    }
+  });
+
+});
