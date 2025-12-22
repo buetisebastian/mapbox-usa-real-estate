@@ -87,5 +87,47 @@ map.addSource('states', {
 
   // ✅ FIN DEL BLOQUE HOVER + TOOLTIP
 
+let hoveredId = null;
+let selectedId = null;
+
+map.on('mousemove', 'states-fill', (e) => {
+  if (!e.features || !e.features.length) return;
+
+  const id = e.features[0].id;
+  if (id == null) return;
+
+  if (hoveredId !== null && hoveredId !== id) {
+    map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
+  }
+
+  hoveredId = id;
+  map.setFeatureState({ source: 'states', id: hoveredId }, { hover: true });
+});
+
+map.on('mouseleave', 'states-fill', () => {
+  if (hoveredId !== null) {
+    map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
+  }
+  hoveredId = null;
+});
+
+map.on('click', 'states-fill', (e) => {
+  if (!e.features || !e.features.length) return;
+
+  const id = e.features[0].id;
+  if (id == null) return;
+
+  // des-seleccionar anterior
+  if (selectedId !== null && selectedId !== id) {
+    map.setFeatureState({ source: 'states', id: selectedId }, { selected: false });
+  }
+
+  // toggle selección
+  const newSelected = selectedId !== id;
+  selectedId = newSelected ? id : null;
+
+  map.setFeatureState({ source: 'states', id }, { selected: newSelected });
+});
+
 });
 
