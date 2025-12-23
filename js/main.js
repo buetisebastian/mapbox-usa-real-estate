@@ -73,14 +73,19 @@ const name = f.properties.NAME || 'State';
 const abbr = f.properties.STUSPS || '';
 const fips = f.properties.STATEFP || '';
 
+const name = f.properties.NAME || 'State';
+const abbr = f.properties.STUSPS || '';
+
 popup
   .setLngLat(e.lngLat)
   .setHTML(
     `<strong>${name}</strong><br/>
-     <small>${abbr} • FIPS: ${fips}</small>`
+     <small>${abbr}</small><br/>
+     <small style="color:#666">Click to select</small>`
   )
   .addTo(map);
 
+    
   });
 
   map.on('mouseleave', 'states-fill', () => {
