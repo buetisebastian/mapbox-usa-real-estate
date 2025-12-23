@@ -80,17 +80,11 @@ map.on('load', () => {
     if (id === null || id === undefined) return;
 
     if (hoveredId !== null && hoveredId !== id) {
-      map.setFeatureState(
-        { source: 'states', id: hoveredId },
-        { hover: false }
-      );
+      map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
     }
 
     hoveredId = id;
-    map.setFeatureState(
-      { source: 'states', id },
-      { hover: true }
-    );
+    map.setFeatureState({ source: 'states', id }, { hover: true });
 
     const name = f.properties.NAME || 'State';
 
@@ -105,10 +99,7 @@ map.on('load', () => {
 
   map.on('mouseleave', 'states-fill', () => {
     if (hoveredId !== null) {
-      map.setFeatureState(
-        { source: 'states', id: hoveredId },
-        { hover: false }
-      );
+      map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
     }
     hoveredId = null;
     popup.remove();
@@ -124,27 +115,62 @@ map.on('load', () => {
     const id = f.id;
     if (id === null || id === undefined) return;
 
+    // des-seleccionar anterior
     if (selectedId !== null && selectedId !== id) {
-      map.setFeatureState(
-        { source: 'states', id: selectedId },
-        { selected: false }
-      );
+      map.setFeatureState({ source: 'states', id: selectedId }, { selected: false });
     }
 
+    // toggle selección
     const selected = selectedId !== id;
     selectedId = selected ? id : null;
 
-    map.setFeatureState(
-      { source: 'states', id },
-      { selected }
-    );
+    map.setFeatureState({ source: 'states', id }, { selected });
 
-    // ✅ ACTUALIZA PANEL IZQUIERDO
+    // actualizar panel izquierdo
     const panel = document.getElementById('selected-state');
     if (panel) {
       panel.textContent = selected
-        ? `Selected state: ${f.properties.NAME}`
+        ? `Selected state: ${f.properties.NAME || 'State'}`
         : 'Selected state: none';
     }
   });
+
+  // =========================
+  // RESET VIEW BUTTON
+  // =========================
+  const resetBtn = document.getElementById('resetBtn');
+  const initialView = { center: [-98.5, 39.8], zoom: 3 };
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      // volver a la vista inicial
+      map.flyTo({
+        center: initialView.center,
+        zoom: initialView.zoom,
+        essential: true
+      });
+
+      // limpiar selección
+      if (selectedId !== null) {
+        map.setFeatureState({ source: 'states', id: selectedId }, { selected: false });
+        selectedId = null;
+      }
+
+      // limpiar hover
+      if (hoveredId !== null) {
+        map.setFeatureState({ source: 'states', id: hoveredId }, { hover: false });
+        hoveredId = null;
+      }
+
+      // cerrar popup
+      popup.remove();
+
+      // reset panel
+      const panel = document.getElementById('selected-state');
+      if (panel) panel.textContent = 'Selected state: none';
+    });
+  } else {
+    console.warn('No se encontró el botón #resetBtn en el HTML');
+  }
 });
+
