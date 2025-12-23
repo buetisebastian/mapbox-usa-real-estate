@@ -70,7 +70,19 @@ map.on('load', () => {
     map.setFeatureState({ source: 'states', id }, { hover: true });
 
     const name = f.properties?.NAME || 'State';
-    popup.setLngLat(e.lngLat).setHTML(`<strong>${name}</strong>`).addTo(map);
+  
+    const name = f.properties.NAME || 'State';
+const abbr = f.properties.STUSPS || '';
+const fips = f.properties.STATEFP || '';
+
+popup
+  .setLngLat(e.lngLat)
+  .setHTML(
+    `<strong>${name}</strong><br/>
+     <small>${abbr} • FIPS: ${fips}</small>`
+  )
+  .addTo(map);
+
   });
 
   map.on('mouseleave', 'states-fill', () => {
