@@ -9,9 +9,42 @@
 </head>
 <body>
 
-<div id="map"></div>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <h1>USA Interactive States Map</h1>
+        <p class="subtitle">Hover to see state name • Click to select a state</p>
+      </div>
+      <button id="resetBtn" class="btn">Reset view</button>
+    </header>
 
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-<script src="js/main.js"></script>
+    <main class="content">
+      <aside class="panel">
+        <h2>How to use</h2>
+        <ul>
+          <li><strong>Hover</strong>: shows state name</li>
+          <li><strong>Click</strong>: toggles selection</li>
+        </ul>
+
+        <h2>Legend</h2>
+        <div class="legend">
+          <div class="swatch-row"><span class="swatch base"></span> Default</div>
+          <div class="swatch-row"><span class="swatch hover"></span> Hover</div>
+          <div class="swatch-row"><span class="swatch selected"></span> Selected</div>
+        </div>
+
+        <p class="note">
+          Built with Mapbox GL JS + GeoJSON. Ready to extend with real-estate KPIs (price, inventory, YoY, etc.).
+        </p>
+      </aside>
+
+      <div id="map"></div>
+    </main>
+  </div>
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script src="js/main.js"></script>
+
 </body>
 </html>
+
