@@ -71,10 +71,6 @@ map.on('load', () => {
 
 const name = f.properties.NAME || 'State';
 const abbr = f.properties.STUSPS || '';
-const fips = f.properties.STATEFP || '';
-
-const name = f.properties.NAME || 'State';
-const abbr = f.properties.STUSPS || '';
 
 popup
   .setLngLat(e.lngLat)
