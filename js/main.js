@@ -69,9 +69,7 @@ map.on('load', () => {
     hoveredId = id;
     map.setFeatureState({ source: 'states', id }, { hover: true });
 
-    const name = f.properties?.NAME || 'State';
-  
-    const name = f.properties.NAME || 'State';
+const name = f.properties.NAME || 'State';
 const abbr = f.properties.STUSPS || '';
 const fips = f.properties.STATEFP || '';
 
