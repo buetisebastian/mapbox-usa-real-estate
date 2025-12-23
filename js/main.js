@@ -76,10 +76,10 @@ popup
   .setLngLat(e.lngLat)
   .setHTML(
     `<strong>${name}</strong><br/>
-     <small>${abbr}</small><br/>
-     <small style="color:#666">Click to select</small>`
+     <small style="color:#555">Click to select state</small>`
   )
   .addTo(map);
+
 
     
   });
