@@ -1,3 +1,6 @@
+/* =========================
+   Base
+========================= */
 html, body {
   margin: 0;
   padding: 0;
@@ -6,103 +9,157 @@ html, body {
 }
 
 .app {
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* =========================
+   Topbar
+========================= */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
+
   padding: 12px 16px;
-  border-bottom: 1px solid #e6e6e6;
-  background: #ffffff;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fff;
 }
 
 .topbar h1 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
+  line-height: 1.2;
 }
 
 .subtitle {
-  margin: 4px 0 0;
+  margin: 4px 0 0 0;
   font-size: 13px;
-  color: #666;
+  color: #555;
 }
 
+.btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #f7f7f7;
+}
+
+/* =========================
+   Layout desktop
+========================= */
 .content {
   flex: 1;
   display: grid;
   grid-template-columns: 320px 1fr;
-  min-height: 0;
+  min-height: 0; /* importante para que el mapa no “empuje” */
 }
 
 .panel {
-  padding: 14px 14px 16px;
-  border-right: 1px solid #e6e6e6;
-  background: #fafafa;
+  padding: 16px;
+  border-right: 1px solid #e8e8e8;
+  background: #fff;
   overflow: auto;
 }
 
 .panel h2 {
-  font-size: 14px;
-  margin: 12px 0 8px;
+  margin: 0 0 8px 0;
+  font-size: 16px;
 }
 
 .panel ul {
-  margin: 0 0 10px 18px;
+  margin: 0 0 16px 18px;
   padding: 0;
   color: #333;
-  font-size: 13px;
 }
 
 .legend {
   display: grid;
   gap: 8px;
-  font-size: 13px;
+  margin-bottom: 12px;
 }
 
 .swatch-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  font-size: 14px;
 }
 
 .swatch {
   width: 14px;
   height: 14px;
-  border-radius: 3px;
-  border: 1px solid #ddd;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
-.swatch.base { background: #3bb2d0; opacity: 0.5; }
-.swatch.hover { background: #ffd166; opacity: 0.9; }
-.swatch.selected { background: #ef476f; opacity: 0.85; }
+.swatch.base { background: #3bb2d0; }
+.swatch.hover { background: #ffd166; }
+.swatch.selected { background: #ef476f; }
 
 .note {
-  margin-top: 14px;
-  font-size: 12px;
-  color: #666;
-  line-height: 1.35;
-}
-
-.btn {
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  background: #fff;
-  border-radius: 8px;
-  cursor: pointer;
   font-size: 13px;
+  color: #555;
+  margin-top: 10px;
 }
 
-.btn:hover {
-  background: #f4f4f4;
+.selected-state {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background: #fafafa;
+  font-size: 14px;
 }
 
+/* Mapa */
 #map {
-  position: relative;
+  min-height: 0;
   width: 100%;
   height: 100%;
+}
+
+/* =========================
+   Responsive móvil
+   - Panel pasa arriba
+   - Mapa abajo ocupando el resto
+========================= */
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .panel {
+    border-right: none;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  /* alto útil del mapa en celular */
+  #map {
+    height: 65vh;
+  }
+}
+
+/* Extra: pantallas muy chicas */
+@media (max-width: 420px) {
+  .topbar h1 { font-size: 18px; }
+  .subtitle { font-size: 12px; }
+  #map { height: 62vh; }
 }
